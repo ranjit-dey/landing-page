@@ -247,6 +247,33 @@
     .close-modal:hover {
       background: #cbd5e1;
     }
+
+    /* File input for loading */
+    .file-input-container {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+
+    .file-input-btn {
+      padding: 8px 16px;
+      background: #10b981;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .file-input {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -258,17 +285,21 @@
     <div class="layout-block" draggable="true" data-layout="two-column">📐 Two Columns</div>
     <div class="layout-block" draggable="true" data-layout="three-column">📐 Three Columns</div>
     <div class="layout-block" draggable="true" data-layout="four-column">📐 Four Columns</div>
-    <div class="layout-block" draggable="true" data-layout="image">🖼 Image Section</div>
+    <div class="layout-block" draggable="true" data-layout="image">🖼️ Image Section</div>
     <div class="layout-block" draggable="true" data-layout="cards">🃏 Card Grid</div>
     <div class="layout-block" draggable="true" data-layout="text">📝 Text Section</div>
-    <div class="layout-block" draggable="true" data-layout="footer">🖥 Footer Section</div>
+    <div class="layout-block" draggable="true" data-layout="footer">🖥️ Footer Section</div>
   </div>
 
   <div class="canvas">
     <h2>Build Your Page</h2>
     <div class="canvas-actions">
-      <button id="previewBtn" class="action-btn secondary">👁 Preview</button>
+      <button id="previewBtn" class="action-btn secondary">👁️ Preview</button>
       <button id="submitBtn" class="action-btn">💾 Save Layout</button>
+      <div class="file-input-container">
+        <button class="file-input-btn">📂 Load Layout</button>
+        <input type="file" id="loadLayout" class="file-input" accept=".json">
+      </div>
     </div>
     <div id="dropzone" class="dropzone"></div>
   </div>
@@ -290,6 +321,7 @@
     const previewModal = document.getElementById('previewModal');
     const closeModal = document.getElementById('closeModal');
     const previewContent = document.getElementById('previewContent');
+    const loadLayoutInput = document.getElementById('loadLayout');
 
     // Drag and drop functionality
     blocks.forEach(block => {
@@ -326,28 +358,80 @@
       previewModal.style.display = 'none';
     });
 
-    // Submit button functionality
+    // Save layout functionality
     submitBtn.addEventListener('click', () => {
-      // In a real app, you would send the HTML to a server
-      // For this demo, we'll just show an alert
-      const htmlContent = dropzone.innerHTML;
-      alert('Layout saved successfully! (In a real app, this would be sent to your server)');
+      const sections = Array.from(dropzone.querySelectorAll('.section')).map(section => {
+        return {
+          type: section.querySelector('.section-title')?.textContent || 'Untitled Section',
+          html: section.innerHTML,
+          layout: getSectionLayoutType(section)
+        };
+      });
+
+      const layoutData = {
+        version: '1.0',
+        createdAt: new Date().toISOString(),
+        sections: sections
+      };
+
+      // Create a download link
+      const dataStr = JSON.stringify(layoutData, null, 2);
+      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
       
-      // Here you could add AJAX to send the content to a server
-      // Example:
-      // fetch('/save-layout', {
-      //   method: 'POST',
-      //   body: JSON.stringify({ html: htmlContent }),
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   }
-      // })
-      // .then(response => response.json())
-      // .then(data => alert('Layout saved!'))
-      // .catch(error => alert('Error saving layout'));
+      const exportName = 'layout-' + new Date().toISOString().slice(0,10) + '.json';
+      
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportName);
+      linkElement.click();
     });
 
-    function createSection(layout) {
+    // Helper function to determine section type
+    function getSectionLayoutType(section) {
+      if (section.querySelector('.hero-section')) return 'hero';
+      if (section.querySelector('.two-col')) return 'two-column';
+      if (section.querySelector('.three-col')) return 'three-column';
+      if (section.querySelector('.four-col')) return 'four-column';
+      if (section.querySelector('.image-section')) return 'image';
+      if (section.querySelector('.card-section')) return 'cards';
+      if (section.querySelector('h1') && section.querySelector('p')) return 'header';
+      if (section.textContent.includes('©')) return 'footer';
+      return 'text';
+    }
+
+    // Load layout functionality
+    loadLayoutInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const layoutData = JSON.parse(event.target.result);
+          loadLayout(layoutData);
+        } catch (error) {
+          alert('Error loading layout: Invalid file format');
+          console.error(error);
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    function loadLayout(layoutData) {
+      // Clear current layout
+      dropzone.innerHTML = '';
+      
+      // Create each section from the saved data
+      if (layoutData.sections && Array.isArray(layoutData.sections)) {
+        layoutData.sections.forEach(sectionData => {
+          if (sectionData.layout) {
+            createSection(sectionData.layout, sectionData.html);
+          }
+        });
+      }
+    }
+
+    function createSection(layout, customHtml = null) {
       let section = document.createElement('div');
       section.className = 'section';
       
@@ -355,84 +439,89 @@
       const controls = document.createElement('div');
       controls.className = 'section-controls';
       controls.innerHTML = `
-        <button class="section-btn edit-btn" title="Edit">✏</button>
-        <button class="section-btn delete-btn" title="Delete">🗑</button>
+        <button class="section-btn edit-btn" title="Edit">✏️</button>
+        <button class="section-btn delete-btn" title="Delete">🗑️</button>
       `;
       section.appendChild(controls);
 
-      // Create different layouts
-      if (layout === 'header') {
-        section.innerHTML += `<div class="section-title">Header</div>
-          <div class="editable-content">
-            <h1>Your Site Header</h1>
-            <p>Navigation links or tagline here</p>
-          </div>`;
-      } else if (layout === 'hero') {
-        section.innerHTML += `<div class="hero-section editable-content">
-          <h1>Welcome to Our Site</h1>
-          <p>A compelling subtitle that explains your value proposition</p>
-          <button style="background: white; color: #6366f1; border: none; padding: 10px 20px; border-radius: 20px; margin-top: 15px; cursor: pointer;">Call to Action</button>
-        </div>`;
-      } else if (layout === 'two-column') {
-        section.innerHTML += `<div class="section-title">Two Column Layout</div>
-          <div class="two-col">
-            <div class="col editable-content">Column 1 Content</div>
-            <div class="col editable-content">Column 2 Content</div>
-          </div>`;
-      } else if (layout === 'three-column') {
-        section.innerHTML += `<div class="section-title">Three Column Layout</div>
-          <div class="three-col">
-            <div class="col editable-content">Column 1</div>
-            <div class="col editable-content">Column 2</div>
-            <div class="col editable-content">Column 3</div>
-          </div>`;
-      } else if (layout === 'four-column') {
-        section.innerHTML += `<div class="section-title">Four Column Layout</div>
-          <div class="four-col">
-            <div class="col editable-content">Column 1</div>
-            <div class="col editable-content">Column 2</div>
-            <div class="col editable-content">Column 3</div>
-            <div class="col editable-content">Column 4</div>
-          </div>`;
-      } else if (layout === 'image') {
-        section.innerHTML += `<div class="section-title">Image Section</div>
-          <div class="image-section">
+      // Use custom HTML if provided (for loading saved layouts)
+      if (customHtml) {
+        section.innerHTML += customHtml;
+      } else {
+        // Create different layouts
+        if (layout === 'header') {
+          section.innerHTML += `<div class="section-title">Header</div>
             <div class="editable-content">
-              <h2>Image Title</h2>
-              <p>Description or caption for your image</p>
-            </div>
-            <div class="image-placeholder">
-              <span>Drag & drop an image here</span>
-            </div>
+              <h1>Your Site Header</h1>
+              <p>Navigation links or tagline here</p>
+            </div>`;
+        } else if (layout === 'hero') {
+          section.innerHTML += `<div class="hero-section editable-content">
+            <h1>Welcome to Our Site</h1>
+            <p>A compelling subtitle that explains your value proposition</p>
+            <button style="background: white; color: #6366f1; border: none; padding: 10px 20px; border-radius: 20px; margin-top: 15px; cursor: pointer;">Call to Action</button>
           </div>`;
-      } else if (layout === 'cards') {
-        section.innerHTML += `<div class="section-title">Card Grid</div>
-          <div class="card-section">
-            <div class="card editable-content">
-              <h3>Card 1</h3>
-              <p>Card content goes here</p>
-            </div>
-            <div class="card editable-content">
-              <h3>Card 2</h3>
-              <p>Card content goes here</p>
-            </div>
-            <div class="card editable-content">
-              <h3>Card 3</h3>
-              <p>Card content goes here</p>
-            </div>
+        } else if (layout === 'two-column') {
+          section.innerHTML += `<div class="section-title">Two Column Layout</div>
+            <div class="two-col">
+              <div class="col editable-content">Column 1 Content</div>
+              <div class="col editable-content">Column 2 Content</div>
+            </div>`;
+        } else if (layout === 'three-column') {
+          section.innerHTML += `<div class="section-title">Three Column Layout</div>
+            <div class="three-col">
+              <div class="col editable-content">Column 1</div>
+              <div class="col editable-content">Column 2</div>
+              <div class="col editable-content">Column 3</div>
+            </div>`;
+        } else if (layout === 'four-column') {
+          section.innerHTML += `<div class="section-title">Four Column Layout</div>
+            <div class="four-col">
+              <div class="col editable-content">Column 1</div>
+              <div class="col editable-content">Column 2</div>
+              <div class="col editable-content">Column 3</div>
+              <div class="col editable-content">Column 4</div>
+            </div>`;
+        } else if (layout === 'image') {
+          section.innerHTML += `<div class="section-title">Image Section</div>
+            <div class="image-section">
+              <div class="editable-content">
+                <h2>Image Title</h2>
+                <p>Description or caption for your image</p>
+              </div>
+              <div class="image-placeholder">
+                <span>Drag & drop an image here</span>
+              </div>
+            </div>`;
+        } else if (layout === 'cards') {
+          section.innerHTML += `<div class="section-title">Card Grid</div>
+            <div class="card-section">
+              <div class="card editable-content">
+                <h3>Card 1</h3>
+                <p>Card content goes here</p>
+              </div>
+              <div class="card editable-content">
+                <h3>Card 2</h3>
+                <p>Card content goes here</p>
+              </div>
+              <div class="card editable-content">
+                <h3>Card 3</h3>
+                <p>Card content goes here</p>
+              </div>
+            </div>`;
+        } else if (layout === 'text') {
+          section.innerHTML += `<div class="editable-content">
+            <h2>Text Section</h2>
+            <p>This is a paragraph where you can add your content.</p>
+            <p>Add as many paragraphs as you need.</p>
           </div>`;
-      } else if (layout === 'text') {
-        section.innerHTML += `<div class="editable-content">
-          <h2>Text Section</h2>
-          <p>This is a paragraph where you can add your content.</p>
-          <p>Add as many paragraphs as you need.</p>
-        </div>`;
-      } else if (layout === 'footer') {
-        section.innerHTML += `<div class="section-title">Footer</div>
-          <div class="editable-content" style="text-align: center; padding: 20px;">
-            <p>© 2025 Your Website</p>
-            <p>Contact Info | Links | Social Media</p>
-          </div>`;
+        } else if (layout === 'footer') {
+          section.innerHTML += `<div class="section-title">Footer</div>
+            <div class="editable-content" style="text-align: center; padding: 20px;">
+              <p>© 2025 Your Website</p>
+              <p>Contact Info | Links | Social Media</p>
+            </div>`;
+        }
       }
 
       // Set up delete button
@@ -455,7 +544,7 @@
           editableElements.forEach(el => {
             el.contentEditable = 'false';
           });
-          editBtn.textContent = '✏';
+          editBtn.textContent = '✏️';
           editBtn.title = 'Edit';
         } else {
           // Enter edit mode
@@ -463,7 +552,7 @@
           editableElements.forEach(el => {
             el.contentEditable = 'true';
           });
-          editBtn.textContent = '✔';
+          editBtn.textContent = '✔️';
           editBtn.title = 'Save';
         }
       });
@@ -492,6 +581,7 @@
       }
 
       dropzone.appendChild(section);
+      return section;
     }
   </script>
 
