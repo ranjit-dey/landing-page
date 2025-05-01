@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Landing Page Generator</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/themes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-blur"></div>
+    
+    <header class="glass">
+        <div class="container">
+            <div class="header-grid">
+                <div class="logo">
+                    <i class="fas fa-magic"></i>
+                    <span>LandingGen</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="#"><i class="fas fa-question-circle"></i> Help</a></li>
+                    </ul>
+                </nav>
+                <div class="theme-switcher">
+                    <button id="theme-toggle" aria-label="Toggle theme" class="glass">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="form-container glass">
+            <div class="form-header">
+                <h1><i class="fas fa-rocket"></i> Create Your Landing Page</h1>
+                <p>Fill out this form to generate a beautiful landing page for your college</p>
+                <div class="progress-bar">
+                    <div class="progress-step active" data-step="1"></div>
+                    <div class="progress-step" data-step="2"></div>
+                    <div class="progress-step" data-step="3"></div>
+                    <div class="progress-step" data-step="4"></div>
+                </div>
+            </div>
+            
+            <form id="landing-form">
+                <!-- Step 1 - Page Type -->
+                <div class="form-step active" data-step="1">
+                    <h2><i class="fas fa-clipboard-list"></i> Select Page Type</h2>
+                    <div class="type-selector grid-3">
+                        <div class="type-option glass">
+                            <input type="radio" id="type-course" name="page-type" value="course" checked>
+                            <label for="type-course">
+                                <div class="type-icon">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <h3>Course</h3>
+                                <p>Promote a new academic course</p>
+                            </label>
+                        </div>
+                        <div class="type-option glass">
+                            <input type="radio" id="type-event" name="page-type" value="event">
+                            <label for="type-event">
+                                <div class="type-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <h3>Event</h3>
+                                <p>Advertise college events</p>
+                            </label>
+                        </div>
+                        <div class="type-option glass">
+                            <input type="radio" id="type-club" name="page-type" value="club">
+                            <label for="type-club">
+                                <div class="type-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h3>Club</h3>
+                                <p>Showcase student organizations</p>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-navigation">
+                        <button type="button" class="btn next-step btn-primary" disabled>Next <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Step 2 - Basic Info -->
+                <div class="form-step" data-step="2">
+                    <h2><i class="fas fa-info-circle"></i> Basic Information</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <div class="input-wrapper glass">
+                                <i class="fas fa-heading"></i>
+                                <input type="text" id="title" name="title" required placeholder="e.g., Introduction to Computer Science">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="subtitle">Subtitle</label>
+                            <div class="input-wrapper glass">
+                                <i class="fas fa-subscript"></i>
+                                <input type="text" id="subtitle" name="subtitle" placeholder="Short catchy description">
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="description">Detailed Description</label>
+                            <div class="textarea-wrapper glass">
+                                <textarea id="description" name="description" rows="5" required></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="image-url">Image URL</label>
+                            <div class="input-wrapper glass">
+                                <i class="fas fa-link"></i>
+                                <input type="url" id="image-url" name="image-url" placeholder="https://example.com/image.jpg">
+                            </div>
+                            <small>Or upload an image below</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="image-upload">Upload Image</label>
+                            <div class="file-upload glass">
+                                <input type="file" id="image-upload" name="image-upload" accept="image/*">
+                                <label for="image-upload">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <span>Choose a file</span>
+                                </label>
+                                <div class="file-preview" id="file-preview"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-navigation">
+                        <button type="button" class="btn prev-step btn-secondary"><i class="fas fa-arrow-left"></i> Previous</button>
+                        <button type="button" class="btn next-step btn-primary">Next <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Step 3 - Additional Details -->
+                <div class="form-step" data-step="3">
+                    <h2><i class="fas fa-ellipsis-h"></i> Additional Details</h2>
+                    <div id="dynamic-fields" class="dynamic-fields-grid">
+                        <!-- Course fields -->
+                        <div class="form-group course-field">
+                            <label for="duration">Duration</label>
+                            <div class="input-wrapper glass">
+                                <i class="fas fa-clock"></i>
+                                <input type="text" id="duration" name="duration" placeholder="e.g., 12 weeks">
+                            </div>
+                        </div>
+                        <div class="form-group course-field">
+                            <label for="instructor">Instructor</label>
+                            <div class="input-wrapper glass">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                                <input type="text" id="instructor" name="instructor" placeholder="Professor name">
+                            </div>
+                        </div>
+                        <div class="form-group course-field">
+                            <label for="credits">Credits</label>
+                            <div class="input-wrapper glass">
+                                <i class="fas fa-award"></i>
+                                <input type="number" id="credits" name="credits" placeholder="3">
+                            </div>
+                        </div>
+
+                        <!-- Event fields -->
+                        <div class="form-group event-field" style="display: none;">
+                            <label for="event-date">Date</label>
+                            <div class="input-wrapper glass">
+                                <i class="fas fa-calendar-day"></i>
+                                <input type="date" id="event-date" name="event-date">
+                            </div>
+                        </div>
+                        <div class="form-group event-field" style="display: none;">
+                            <label for="event-time">Time</label>
+                            <div class="input-wrapper glass">
+                                <i class="fas fa-clock"></i>
+                                <input type="time" id="event-time" name="event-time">
+                            </div>
+                        </div>
+                        <div class="form-group event-field" style="display: none;">
+                            <label for="location">Location</label>
+                            <div class="input-wrapper glass">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <input type="text" id="location" name="location" placeholder="Venue">
+                            </div>
+                        </div>
+
+                        <!-- Club fields -->
+                        <div class="form-group club-field" style="display: none;">
+                            <label for="meeting-schedule">Meeting Schedule</label>
+                            <div class="input-wrapper glass">
+                                <i class="fas fa-calendar-week"></i>
+                                <input type="text" id="meeting-schedule" name="meeting-schedule" placeholder="e.g., Every Tuesday at 4 PM">
+                            </div>
+                        </div>
+                        <div class="form-group club-field" style="display: none;">
+                            <label for="club-leader">Club Leader</label>
+                            <div class="input-wrapper glass">
+                                <i class="fas fa-user-tie"></i>
+                                <input type="text" id="club-leader" name="club-leader" placeholder="Student name">
+                            </div>
+                        </div>
+                        <div class="form-group club-field" style="display: none;">
+                            <label for="membership">Membership</label>
+                            <div class="select-wrapper glass">
+                                <i class="fas fa-user-friends"></i>
+                                <select id="membership" name="membership">
+                                    <option value="open">Open to all</option>
+                                    <option value="application">Application required</option>
+                                    <option value="invite">Invite only</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="cta-text">Call-to-Action Button Text</label>
+                            <div class="input-wrapper glass">
+                                <i class="fas fa-mouse-pointer"></i>
+                                <input type="text" id="cta-text" name="cta-text" value="Learn More" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cta-link">Call-to-Action Link</label>
+                            <div class="input-wrapper glass">
+                                <i class="fas fa-link"></i>
+                                <input type="url" id="cta-link" name="cta-link" placeholder="https://example.com/register">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-navigation">
+                        <button type="button" class="btn prev-step btn-secondary"><i class="fas fa-arrow-left"></i> Previous</button>
+                        <button type="button" class="btn next-step btn-primary">Next <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Step 4 - Customization -->
+                <div class="form-step" data-step="4">
+                    <h2><i class="fas fa-paint-brush"></i> Customization</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="primary-color">Primary Color</label>
+                            <div class="color-picker glass">
+                                <input type="color" id="primary-color" name="primary-color" value="#6366f1">
+                                <span>#6366f1</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="secondary-color">Secondary Color</label>
+                            <div class="color-picker glass">
+                                <input type="color" id="secondary-color" name="secondary-color" value="#f59e0b">
+                                <span>#f59e0b</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="font-family">Font Family</label>
+                            <div class="select-wrapper glass">
+                                <i class="fas fa-font"></i>
+                                <select id="font-family" name="font-family">
+                                    <option value="'Poppins', sans-serif">Poppins (Modern)</option>
+                                    <option value="'Montserrat', sans-serif">Montserrat (Bold)</option>
+                                    <option value="'Roboto', sans-serif">Roboto (Clean)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <div class="checkbox-group grid-2">
+                                <label class="checkbox-option glass">
+                                    <input type="checkbox" id="enable-testimonials" name="enable-testimonials">
+                                    <span class="checkmark"></span>
+                                    <div>
+                                        <h4>Include Testimonials</h4>
+                                        <p>Add a section with student feedback</p>
+                                    </div>
+                                </label>
+                                <label class="checkbox-option glass">
+                                    <input type="checkbox" id="enable-faq" name="enable-faq">
+                                    <span class="checkmark"></span>
+                                    <div>
+                                        <h4>Include FAQ</h4>
+                                        <p>Add frequently asked questions</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-navigation">
+                        <button type="button" class="btn prev-step btn-secondary"><i class="fas fa-arrow-left"></i> Previous</button>
+                        <button type="button" id="generate-btn" class="btn btn-primary"><i class="fas fa-magic"></i> Generate Landing Page</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="glass">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3><i class="fas fa-magic"></i> LandingGen</h3>
+                    <p>Create beautiful landing pages for your college with ease.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="#"><i class="fas fa-question-circle"></i> Help</a></li>
+                        <li><a href="#"><i class="fas fa-envelope"></i> Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-book"></i> Documentation</a></li>
+                        <li><a href="#"><i class="fas fa-video"></i> Tutorials</a></li>
+                        <li><a href="#"><i class="fas fa-lightbulb"></i> Examples</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="year"></span> LandingGen. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

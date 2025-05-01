@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Enhanced Section Layout Builder</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      display: flex;
+      font-family: sans-serif;
+      background: #f1f5f9;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: #ffffff;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      overflow-y: auto;
+    }
+
+    .sidebar h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #334155;
+    }
+
+    .layout-block {
+      padding: 12px;
+      margin-bottom: 12px;
+      background: #e2e8f0;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      cursor: grab;
+      text-align: center;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .layout-block:hover {
+      background: #cbd5e1;
+      transform: translateX(3px);
+    }
+
+    .canvas {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .canvas h2 {
+      color: #334155;
+      margin-bottom: 20px;
+    }
+
+    .canvas-actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .action-btn {
+      padding: 8px 16px;
+      background: #6366f1;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .action-btn:hover {
+      background: #4f46e5;
+    }
+
+    .action-btn.secondary {
+      background: #94a3b8;
+    }
+
+    .action-btn.secondary:hover {
+      background: #64748b;
+    }
+
+    .dropzone {
+      min-height: 500px;
+      background: #ffffff;
+      border: 2px dashed #94a3b8;
+      border-radius: 10px;
+      padding: 25px;
+      flex-grow: 1;
+    }
+
+    .section {
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      background: #f8fafc;
+      position: relative;
+    }
+
+    .section-controls {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      display: flex;
+      gap: 5px;
+    }
+
+    .section-btn {
+      background: #e2e8f0;
+      border: none;
+      border-radius: 4px;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .section-btn:hover {
+      background: #cbd5e1;
+    }
+
+    .two-col {
+      display: flex;
+      gap: 15px;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 15px;
+    }
+
+    .four-col {
+      display: flex;
+      gap: 15px;
+    }
+
+    .col {
+      flex: 1;
+      background: #fff;
+      padding: 15px;
+      border: 1px solid #e2e8f0;
+      min-height: 80px;
+      border-radius: 6px;
+    }
+
+    .hero-section {
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+    }
+
+    .image-section {
+      text-align: center;
+    }
+
+    .image-placeholder {
+      width: 100%;
+      height: 200px;
+      background-color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .image-placeholder img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+    }
+
+    .card-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .card {
+      flex: 1 1 200px;
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .editing-mode {
+      outline: 2px dashed #6366f1;
+    }
+
+    .section-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #334155;
+    }
+
+    /* Preview modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      overflow-y: auto;
+      padding: 40px;
+    }
+
+    .modal-content {
+      background: white;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px;
+      border-radius: 8px;
+      position: relative;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #e2e8f0;
+      border: none;
+      border-radius: 4px;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .close-modal:hover {
+      background: #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Layout Blocks</h2>
+    <div class="layout-block" draggable="true" data-layout="header">🧱 Header Section</div>
+    <div class="layout-block" draggable="true" data-layout="hero">🌟 Hero Section</div>
+    <div class="layout-block" draggable="true" data-layout="two-column">📐 Two Columns</div>
+    <div class="layout-block" draggable="true" data-layout="three-column">📐 Three Columns</div>
+    <div class="layout-block" draggable="true" data-layout="four-column">📐 Four Columns</div>
+    <div class="layout-block" draggable="true" data-layout="image">🖼 Image Section</div>
+    <div class="layout-block" draggable="true" data-layout="cards">🃏 Card Grid</div>
+    <div class="layout-block" draggable="true" data-layout="text">📝 Text Section</div>
+    <div class="layout-block" draggable="true" data-layout="footer">🖥 Footer Section</div>
+  </div>
+
+  <div class="canvas">
+    <h2>Build Your Page</h2>
+    <div class="canvas-actions">
+      <button id="previewBtn" class="action-btn secondary">👁 Preview</button>
+      <button id="submitBtn" class="action-btn">💾 Save Layout</button>
+    </div>
+    <div id="dropzone" class="dropzone"></div>
+  </div>
+
+  <!-- Preview Modal -->
+  <div id="previewModal" class="modal">
+    <div class="modal-content">
+      <button class="close-modal" id="closeModal">✕</button>
+      <h2>Page Preview</h2>
+      <div id="previewContent"></div>
+    </div>
+  </div>
+
+  <script>
+    const blocks = document.querySelectorAll('.layout-block');
+    const dropzone = document.getElementById('dropzone');
+    const previewBtn = document.getElementById('previewBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const previewModal = document.getElementById('previewModal');
+    const closeModal = document.getElementById('closeModal');
+    const previewContent = document.getElementById('previewContent');
+
+    // Drag and drop functionality
+    blocks.forEach(block => {
+      block.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('layout', block.dataset.layout);
+      });
+    });
+
+    dropzone.addEventListener('dragover', (e) => e.preventDefault());
+
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const layout = e.dataTransfer.getData('layout');
+      createSection(layout);
+    });
+
+    // Preview button functionality
+    previewBtn.addEventListener('click', () => {
+      previewContent.innerHTML = dropzone.innerHTML;
+      
+      // Remove edit controls from preview
+      const controls = previewContent.querySelectorAll('.section-controls');
+      controls.forEach(control => control.remove());
+      
+      // Remove editing outlines if any
+      const editingSections = previewContent.querySelectorAll('.editing-mode');
+      editingSections.forEach(section => section.classList.remove('editing-mode'));
+      
+      previewModal.style.display = 'block';
+    });
+
+    // Close modal
+    closeModal.addEventListener('click', () => {
+      previewModal.style.display = 'none';
+    });
+
+    // Submit button functionality
+    submitBtn.addEventListener('click', () => {
+      // In a real app, you would send the HTML to a server
+      // For this demo, we'll just show an alert
+      const htmlContent = dropzone.innerHTML;
+      alert('Layout saved successfully! (In a real app, this would be sent to your server)');
+      
+      // Here you could add AJAX to send the content to a server
+      // Example:
+      // fetch('/save-layout', {
+      //   method: 'POST',
+      //   body: JSON.stringify({ html: htmlContent }),
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   }
+      // })
+      // .then(response => response.json())
+      // .then(data => alert('Layout saved!'))
+      // .catch(error => alert('Error saving layout'));
+    });
+
+    function createSection(layout) {
+      let section = document.createElement('div');
+      section.className = 'section';
+      
+      // Add section controls
+      const controls = document.createElement('div');
+      controls.className = 'section-controls';
+      controls.innerHTML = `
+        <button class="section-btn edit-btn" title="Edit">✏</button>
+        <button class="section-btn delete-btn" title="Delete">🗑</button>
+      `;
+      section.appendChild(controls);
+
+      // Create different layouts
+      if (layout === 'header') {
+        section.innerHTML += `<div class="section-title">Header</div>
+          <div class="editable-content">
+            <h1>Your Site Header</h1>
+            <p>Navigation links or tagline here</p>
+          </div>`;
+      } else if (layout === 'hero') {
+        section.innerHTML += `<div class="hero-section editable-content">
+          <h1>Welcome to Our Site</h1>
+          <p>A compelling subtitle that explains your value proposition</p>
+          <button style="background: white; color: #6366f1; border: none; padding: 10px 20px; border-radius: 20px; margin-top: 15px; cursor: pointer;">Call to Action</button>
+        </div>`;
+      } else if (layout === 'two-column') {
+        section.innerHTML += `<div class="section-title">Two Column Layout</div>
+          <div class="two-col">
+            <div class="col editable-content">Column 1 Content</div>
+            <div class="col editable-content">Column 2 Content</div>
+          </div>`;
+      } else if (layout === 'three-column') {
+        section.innerHTML += `<div class="section-title">Three Column Layout</div>
+          <div class="three-col">
+            <div class="col editable-content">Column 1</div>
+            <div class="col editable-content">Column 2</div>
+            <div class="col editable-content">Column 3</div>
+          </div>`;
+      } else if (layout === 'four-column') {
+        section.innerHTML += `<div class="section-title">Four Column Layout</div>
+          <div class="four-col">
+            <div class="col editable-content">Column 1</div>
+            <div class="col editable-content">Column 2</div>
+            <div class="col editable-content">Column 3</div>
+            <div class="col editable-content">Column 4</div>
+          </div>`;
+      } else if (layout === 'image') {
+        section.innerHTML += `<div class="section-title">Image Section</div>
+          <div class="image-section">
+            <div class="editable-content">
+              <h2>Image Title</h2>
+              <p>Description or caption for your image</p>
+            </div>
+            <div class="image-placeholder">
+              <span>Drag & drop an image here</span>
+            </div>
+          </div>`;
+      } else if (layout === 'cards') {
+        section.innerHTML += `<div class="section-title">Card Grid</div>
+          <div class="card-section">
+            <div class="card editable-content">
+              <h3>Card 1</h3>
+              <p>Card content goes here</p>
+            </div>
+            <div class="card editable-content">
+              <h3>Card 2</h3>
+              <p>Card content goes here</p>
+            </div>
+            <div class="card editable-content">
+              <h3>Card 3</h3>
+              <p>Card content goes here</p>
+            </div>
+          </div>`;
+      } else if (layout === 'text') {
+        section.innerHTML += `<div class="editable-content">
+          <h2>Text Section</h2>
+          <p>This is a paragraph where you can add your content.</p>
+          <p>Add as many paragraphs as you need.</p>
+        </div>`;
+      } else if (layout === 'footer') {
+        section.innerHTML += `<div class="section-title">Footer</div>
+          <div class="editable-content" style="text-align: center; padding: 20px;">
+            <p>© 2025 Your Website</p>
+            <p>Contact Info | Links | Social Media</p>
+          </div>`;
+      }
+
+      // Set up delete button
+      const deleteBtn = section.querySelector('.delete-btn');
+      deleteBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to delete this section?')) {
+          section.remove();
+        }
+      });
+
+      // Set up edit button
+      const editBtn = section.querySelector('.edit-btn');
+      editBtn.addEventListener('click', () => {
+        const editableElements = section.querySelectorAll('.editable-content');
+        const isEditing = section.classList.contains('editing-mode');
+        
+        if (isEditing) {
+          // Exit edit mode
+          section.classList.remove('editing-mode');
+          editableElements.forEach(el => {
+            el.contentEditable = 'false';
+          });
+          editBtn.textContent = '✏';
+          editBtn.title = 'Edit';
+        } else {
+          // Enter edit mode
+          section.classList.add('editing-mode');
+          editableElements.forEach(el => {
+            el.contentEditable = 'true';
+          });
+          editBtn.textContent = '✔';
+          editBtn.title = 'Save';
+        }
+      });
+
+      // Make the image placeholder a drop target
+      if (layout === 'image') {
+        const imagePlaceholder = section.querySelector('.image-placeholder');
+        imagePlaceholder.addEventListener('dragover', (e) => e.preventDefault());
+        imagePlaceholder.addEventListener('drop', (e) => {
+          e.preventDefault();
+          const files = e.dataTransfer.files;
+          if (files.length > 0) {
+            const file = files[0];
+            if (file.type.startsWith('image/')) {
+              const reader = new FileReader();
+              reader.onload = (event) => {
+                imagePlaceholder.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = event.target.result;
+                imagePlaceholder.appendChild(img);
+              };
+              reader.readAsDataURL(file);
+            }
+          }
+        });
+      }
+
+      dropzone.appendChild(section);
+    }
+  </script>
+
+</body>
+</html>

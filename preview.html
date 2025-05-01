@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Landing Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/preview.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style id="dynamic-styles"></style>
+</head>
+
+<body>
+    <header class="preview-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>University</span>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#details">Details</a></li>
+                        <li><a href="#testimonials">Testimonials</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <button class="theme-toggle" id="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="cta-button" id="main-cta">Register Now</button>
+                    <button class="mobile-menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="container">
+                <div class="hero-grid">
+                    <div class="hero-content">
+                        <h1 class="hero-title" id="page-title">Course Title</h1>
+                        <p class="hero-subtitle" id="page-subtitle">Course Subtitle</p>
+                        <p class="hero-description" id="page-description">Course description goes here.</p>
+                        <div class="hero-cta">
+                            <button class="cta-button">Register Now</button>
+                            <a href="#details" class="secondary-button">
+                                <i class="fas fa-info-circle"></i> Learn More
+                            </a>
+                        </div>
+                    </div>
+                    <div class="hero-image-container">
+                        <div class="hero-image-wrapper">
+                            <img id="page-image" style="display:none;" alt="Course Image">
+                            <!-- Placeholder will be inserted here by JS if no image -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>About This <span id="page-type-label">Course</span></h2>
+                    <p class="section-subtitle">Everything you need to know about our program</p>
+                </div>
+                <div class="about-grid">
+                    <div class="about-content">
+                        <p class="about-text" id="page-full-description">Detailed course description goes here.</p>
+                        <div class="about-highlights">
+                            <div class="highlight-card">
+                                <i class="fas fa-laptop-code"></i>
+                                <h4>Hands-on Projects</h4>
+                                <p>Build real applications during the course</p>
+                            </div>
+                            <div class="highlight-card">
+                                <i class="fas fa-user-tie"></i>
+                                <h4>Expert Instructors</h4>
+                                <p>Learn from industry professionals</p>
+                            </div>
+                            <div class="highlight-card">
+                                <i class="fas fa-certificate"></i>
+                                <h4>Certification</h4>
+                                <p>Earn a recognized certificate</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about-details">
+                        <div class="detail-card">
+                            <i class="fas fa-clock"></i>
+                            <h3>Duration</h3>
+                            <p id="duration-value">12 weeks</p>
+                        </div>
+                        <div class="detail-card">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <h3>Instructor</h3>
+                            <p id="instructor-value">Professor Name</p>
+                        </div>
+                        <div class="detail-card">
+                            <i class="fas fa-award"></i>
+                            <h3>Credits</h3>
+                            <p id="credits-value">3</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="details" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2><span id="page-type-label-2">Course</span> Details</h2>
+                    <p class="section-subtitle">What you'll learn in this program</p>
+                </div>
+                <div class="details-content" id="dynamic-details">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>What Our Students Say</h2>
+                    <p class="section-subtitle">Hear from past participants</p>
+                </div>
+                <div class="testimonials-container">
+                    <!-- Testimonial cards will be inserted here -->
+                </div>
+            </div>
+        </section>
+
+        <section id="faq" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Frequently Asked Questions</h2>
+                    <p class="section-subtitle">Find answers to common questions</p>
+                </div>
+                <div class="faq-container">
+                    <!-- FAQ items will be inserted here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="preview-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3><i class="fas fa-graduation-cap"></i> University</h3>
+                    <p>Providing quality education since 1950.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Courses</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Events</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 University Ave</li>
+                        <li><i class="fas fa-phone"></i> (123) 456-7890</li>
+                        <li><i class="fas fa-envelope"></i> info@university.edu</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="footer-year"></span> University. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/preview.js"></script>
+</body>
+
+</html>

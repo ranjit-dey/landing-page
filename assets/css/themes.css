@@ -1,0 +1,60 @@
+/* Dark Theme Enhancements */
+[data-theme="dark"] {
+    /* Color overrides */
+    --primary-color: #818cf8;
+    --primary-light: #a5b4fc;
+    --secondary-color: #fbbf24;
+    --secondary-light: #fcd34d;
+    --text-color: #f8fafc;
+    --text-light: #94a3b8;
+    --bg-color: #0f172a;
+    --bg-light: #1e293b;
+    --card-bg: rgba(30, 41, 59, 0.8);
+    --header-bg: rgba(15, 23, 42, 0.8);
+    --footer-bg: rgba(15, 23, 42, 0.8);
+    --border-color: rgba(100, 116, 139, 0.3);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    
+    /* Specific dark mode enhancements */
+    .faq-item {
+        background-color: rgba(30, 41, 59, 0.8);
+        border-color: rgba(100, 116, 139, 0.3);
+    }
+    
+    .faq-question {
+        background-color: rgba(30, 41, 59, 0.8);
+        color: var(--text-color);
+    }
+    
+    .faq-question:hover {
+        background-color: rgba(99, 102, 241, 0.1);
+    }
+    
+    .faq-answer {
+        background-color: rgba(15, 23, 42, 0.8);
+        color: var(--text-light);
+    }
+    
+    .type-option {
+        background-color: rgba(30, 41, 59, 0.8);
+    }
+    
+    .input-wrapper input,
+    .textarea-wrapper textarea,
+    .select-wrapper select {
+        background-color: rgba(15, 23, 42, 0.5);
+        color: var(--text-color);
+    }
+    
+    .file-upload {
+        background-color: rgba(15, 23, 42, 0.5);
+    }
+    
+    .checkbox-option {
+        background-color: rgba(15, 23, 42, 0.5);
+    }
+    
+    .color-picker {
+        background-color: rgba(15, 23, 42, 0.5);
+    }
+}
